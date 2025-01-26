@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL;
+
 const WebcamStream = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -11,12 +12,12 @@ const WebcamStream = () => {
   useEffect(() => {
     const startWebcam = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-          video: { width: 640, height: 480 } 
+        const newStream = await navigator.mediaDevices.getUserMedia({
+          video: { width: 640, height: 480 }
         });
-        setStream(stream);
+        setStream(newStream);
         if (videoRef.current) {
-          videoRef.current.srcObject = stream;
+          videoRef.current.srcObject = newStream;
         }
       } catch (err) {
         console.error("Error accessing webcam:", err);
@@ -25,8 +26,8 @@ const WebcamStream = () => {
 
     startWebcam();
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+      if (videoRef.current && videoRef.current.srcObject) {
+        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
       }
     };
   }, []);
@@ -36,7 +37,7 @@ const WebcamStream = () => {
     if (!videoRef.current || !canvasRef.current || processingRef.current) return;
 
     processingRef.current = true; // Đánh dấu đang xử lý
-    
+
     try {
       const canvas = canvasRef.current;
       const context = canvas.getContext('2d');
@@ -69,7 +70,7 @@ const WebcamStream = () => {
               const formData = new FormData();
               formData.append('image', blob, 'frame.jpg');
 
-              const response = await fetch(`(${API_URL})/process_frame`, {
+              const response = await fetch(`${API_URL}/process_frame`, {
                 method: 'POST',
                 body: formData,
               });
@@ -89,7 +90,7 @@ const WebcamStream = () => {
       const processedBlob = await sendFrame();
       const imageUrl = URL.createObjectURL(processedBlob);
       const processedImage = new Image();
-      
+
       processedImage.onload = () => {
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.drawImage(processedImage, 0, 0);
@@ -98,7 +99,7 @@ const WebcamStream = () => {
       };
 
       processedImage.src = imageUrl;
-      
+
     } catch (error) {
       console.error("Error processing frame:", error);
       processingRef.current = false;
@@ -108,7 +109,7 @@ const WebcamStream = () => {
   // Thiết lập loop xử lý frame
   useEffect(() => {
     let animationFrameId;
-    
+
     const animate = () => {
       processFrame();
       animationFrameId = requestAnimationFrame(animate);
@@ -140,13 +141,13 @@ const WebcamStream = () => {
           backgroundColor: '#000'
         }}
       />
-      <div className="status-indicator" 
-           style={{ 
-             color: processingRef.current ? '#ff0000' : '#00ff00',
-             position: 'absolute',
-             top: '10px',
-             left: '10px'
-           }}>
+      <div className="status-indicator"
+        style={{
+          color: processingRef.current ? '#ff0000' : '#00ff00',
+          position: 'absolute',
+          top: '10px',
+          left: '10px'
+        }}>
         {processingRef.current ? 'Processing...' : 'Ready'}
       </div>
     </div>
