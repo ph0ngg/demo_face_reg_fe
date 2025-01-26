@@ -26,8 +26,9 @@ const WebcamStream = () => {
 
     startWebcam();
     return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+      const currentVideoRef = videoRef.current; // Lưu giá trị của ref vào một biến cục bộ
+      if (currentVideoRef && currentVideoRef.srcObject) {
+        currentVideoRef.srcObject.getTracks().forEach(track => track.stop());
       }
     };
   }, []);
