@@ -42,7 +42,7 @@ const AddPerson = () => {
         formData.append('image', personData.image);
 
         try {
-            const response = await fetch(`(${API_URL})/add_person`, {
+            const response = await fetch(`${API_URL}/add_person`, {
                 method: 'POST',
                 body: formData,
             });
