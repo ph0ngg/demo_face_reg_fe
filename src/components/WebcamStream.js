@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-const API_URL = 'https://31a1-2405-4802-2461-dd90-f574-d18e-45f1-9a51.ngrok-free.app';
+const API_URL = ' https://2dea-1-55-241-76.ngrok-free.app';
 
 const WebcamStream = () => {
   const videoRef = useRef(null);
