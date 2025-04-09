@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 // import './Person.css';
 
-const API_URL = 'https://8bb1-1-55-241-76.ngrok-free.app';
+const API_URL = 'https://60e2-1-55-241-76.ngrok-free.app';
 const AddPerson = () => {
     const [personData, setPersonData] = useState({
         name: '',
